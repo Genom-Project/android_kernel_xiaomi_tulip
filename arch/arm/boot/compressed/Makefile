@@ -13,6 +13,9 @@ ifeq ($(CONFIG_DEBUG_UNCOMPRESS),y)
 OBJS	+= debug.o
 endif
 FONTC	= $(srctree)/lib/fonts/font_acorn_8x8.c
+ifeq ($(CONFIG_KERNEL_LZ4),y)
+CFLAGS_decompress.o := -Oz
+endif
 
 # string library code (-Os is enforced to keep it much smaller)
 OBJS		+= string.o
