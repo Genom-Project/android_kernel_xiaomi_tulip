@@ -41,6 +41,8 @@
 #define FTS_SUSPEND_LEVEL 1     /* Early-suspend level */
 #endif
 
+#include <linux/proc_fs.h>
+
 /*****************************************************************************
 * Private constant and macro definitions using #define
 *****************************************************************************/
@@ -1289,6 +1291,40 @@ static void fts_ts_late_resume(struct early_suspend *handler)
 }
 #endif
 
+static int fts_proc_init(struct kobject *sysfs_node_parent) {
+	int ret = 0;
+	char *driver_path;
+
+	struct proc_dir_entry *proc_entry_ts;
+
+	// allocate memory for input device path
+	driver_path = kzalloc(PATH_MAX, GFP_KERNEL);
+	if(!driver_path) {
+		ret = -ENOMEM;
+		pr_err("%s: failed to allocate memory\n", __func__);
+		goto exit;
+	}
+
+	// store input device path
+	sprintf(driver_path, "/sys%s",
+			kobject_get_path(sysfs_node_parent, GFP_KERNEL));
+
+	pr_debug("%s: driver_path:%s\n", __func__, driver_path);
+
+	// symlink /proc/touchpanel to input device
+	proc_entry_ts = proc_symlink("touchpanel", NULL, driver_path);
+	if (!proc_entry_ts) {
+		ret = -ENOMEM;
+		pr_err("%s: failed to symlink to touchpanel\n", __func__);
+		goto free_driver_path;
+	}
+
+free_driver_path:
+	kfree(driver_path);
+exit:
+	return ret;
+}
+
 /*****************************************************************************
 *  Name: fts_ts_probe
 *  Brief:
@@ -1408,6 +1444,11 @@ static int fts_ts_probe(struct i2c_client *client, const struct i2c_device_id *i
 		FTS_ERROR("create sysfs node fail");
 	}
 #endif
+
+	ret = fts_proc_init(&client->dev.kobj);
+	if (ret) {
+		FTS_ERROR("symlink sysfs node fail");
+	}
 
 #if FTS_POINT_REPORT_CHECK_EN
 	ret = fts_point_report_check_init(ts_data);
