@@ -102,6 +102,7 @@ struct nvt_ts_data {
 	struct input_dev *input_dev;
 	struct work_struct nvt_work;
 	struct delayed_work nvt_fwu_work;
+	struct attribute_group attrs;
 	uint16_t addr;
 	int8_t phys[32];
 #if defined(CONFIG_FB)
@@ -126,6 +127,7 @@ struct nvt_ts_data {
 	const struct nvt_ts_mem_map *mmap;
 	uint8_t carrier_system;
 	uint16_t nvt_pid;
+	struct proc_dir_entry *input_proc;
 };
 
 #if NVT_TOUCH_PROC
