@@ -29,18 +29,19 @@ struct mmc_pwrseq_simple {
 static void mmc_pwrseq_simple_set_gpios_value(struct mmc_pwrseq_simple *pwrseq,
 					      int value)
 {
+	int i, *values;
 	struct gpio_descs *reset_gpios = pwrseq->reset_gpios;
+	int nvalues = reset_gpios->ndescs;
 
-	if (!IS_ERR(reset_gpios)) {
-		int i;
-		int values[reset_gpios->ndescs];
+		values = kmalloc_array(nvalues, sizeof(int), GFP_KERNEL);
+		if (!values)
+			return;
 
-		for (i = 0; i < reset_gpios->ndescs; i++)
-			values[i] = value;
+		for (i = 0; i < nvalues; i++)
+		values[i] = value;
 
-		gpiod_set_array_value_cansleep(
-			reset_gpios->ndescs, reset_gpios->desc, values);
-	}
+	gpiod_set_array_value_cansleep(nvalues, reset_gpios->desc, values);
+		kfree(values);
 }
 
 static void mmc_pwrseq_simple_pre_power_on(struct mmc_host *host)
