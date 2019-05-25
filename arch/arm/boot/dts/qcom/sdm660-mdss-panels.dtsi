@@ -1,4 +1,5 @@
 /* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2019 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -27,6 +28,9 @@
 #include "dsi-panel-rm67195-amoled-fhd-cmd.dtsi"
 #include "dsi-panel-lgd-incell-sw49106-fhd-video.dtsi"
 #include "dsi-panel-hx8399c-fhd-plus-video.dtsi"
+#include "dsi-panel-tianma-e7t-nt36672a-1080p-video.dtsi"
+#include "dsi-panel-shenchao-e7t-nt36672a-1080p-video.dtsi"
+#include "dsi-panel-boe-e7t-ft8719-1080p-video.dtsi"
 
 &soc {
 	dsi_panel_pwr_supply: dsi_panel_pwr_supply {
@@ -40,6 +44,8 @@
 			qcom,supply-max-voltage = <1950000>;
 			qcom,supply-enable-load = <32000>;
 			qcom,supply-disable-load = <80>;
+			qcom,supply-post-on-sleep = <2>;
+			qcom,supply-pre-off-sleep = <10>;
 		};
 
 		qcom,panel-supply-entry@1 {
@@ -49,6 +55,7 @@
 			qcom,supply-max-voltage = <6000000>;
 			qcom,supply-enable-load = <100000>;
 			qcom,supply-disable-load = <100>;
+			qcom,supply-pre-on-sleep = <8>;
 		};
 
 		qcom,panel-supply-entry@2 {
@@ -59,6 +66,7 @@
 			qcom,supply-enable-load = <100000>;
 			qcom,supply-disable-load = <100>;
 			qcom,supply-post-on-sleep = <10>;
+			qcom,supply-pre-on-sleep = <8>;
 		};
 	};
 
@@ -144,9 +152,6 @@
 	qcom,mdss-dsi-panel-max-error-count = <3>;
 	qcom,mdss-dsi-min-refresh-rate = <53>;
 	qcom,mdss-dsi-max-refresh-rate = <60>;
-	qcom,mdss-dsi-pan-enable-dynamic-bitclk;
-	qcom,mdss-dsi-dynamic-bitclk_freq = <798240576 801594528 804948480
-		808302432 811656384>;
 	qcom,mdss-dsi-pan-enable-dynamic-fps;
 	qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_vfp";
 };
@@ -175,6 +180,37 @@
 		24 1c 08 09 05 03 04 a0];
 	qcom,mdss-dsi-t-clk-post = <0x0e>;
 	qcom,mdss-dsi-t-clk-pre = <0x31>;
+};
+
+&dsi_nt36672a_e7t_tianma_fhdplus_video {
+        qcom,mdss-dsi-panel-timings-phy-v2 = [26 21 09 0b 06 03 04 a0
+               26 21 09 0b 06 03 04 a0
+               26 21 09 0b 06 03 04 a0
+               26 21 09 0b 06 03 04 a0
+               26 20 0a 0b 06 03 04 a0];
+	qcom,mdss-dsi-min-refresh-rate = <48>;
+        qcom,mdss-dsi-max-refresh-rate = <60>;
+};
+
+&dsi_nt36672a_e7t_shenchao_fhdplus_video {
+	qcom,mdss-dsi-panel-timings-phy-v2 = [26 21 09 0b 06 03 04 a0
+               26 21 09 0b 06 03 04 a0
+               26 21 09 0b 06 03 04 a0
+               26 21 09 0b 06 03 04 a0
+               26 20 0a 0b 06 03 04 a0];
+	qcom,mdss-dsi-min-refresh-rate = <48>;
+        qcom,mdss-dsi-max-refresh-rate = <60>;
+
+};
+
+&dsi_ft8719_e7t_boe_fhdplus_video {
+        qcom,mdss-dsi-panel-timings-phy-v2 = [26 21 09 0b 06 03 04 a0
+                26 21 09 0b 06 03 04 a0
+                26 21 09 0b 06 03 04 a0
+                26 21 09 0b 06 03 04 a0
+                26 20 0a 0b 06 03 04 a0];
+        qcom,mdss-dsi-min-refresh-rate = <48>;
+        qcom,mdss-dsi-max-refresh-rate = <60>;
 };
 
 &dsi_dual_sharp_video {
